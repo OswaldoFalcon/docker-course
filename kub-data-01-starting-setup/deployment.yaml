@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: story
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: waldofal/kub-data:2
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+          env:
+            - name: STORY_FOLDER
+              # value: 'story'
+              valueFrom:
+                configMapKeyRef:
+                  name: data-env
+                  key: folder
+      volumes:
+        - name: story-volume
+          # emptyDir: {}
+          # hostPath:
+          #   path: /Users/oswaldofalconreyes/develop/Bunsan/dokcerCourse/kub-data-01-starting-setup/share
+          #   type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: host-pvc

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app
+spec:
+  replicas: 1
+  selector:
+    # matchExpressions:
+    #   - {key: app, operator: In, values:[second-app, first-app}
+    matchLabels:
+      app: second-app
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: second-app
+        tier: backend
+    spec:
+      containers:
+        - name: second-node
+          image: waldofal/kub-app:2
+          imagePullPolicy: always
